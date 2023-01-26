@@ -35,7 +35,16 @@ class IndexController extends Controller
          * テキストp068の内容
          * bladeテンプレートに$tweetsを渡す。
          */
-        $tweets = Tweet::all();
+        // $tweets = Tweet::all();
+        // return view('tweet.index')
+        // ->with('tweets', $tweets);
+
+        /**
+         * テキストp082の内容
+         * Eloquentモデルがクエリビルダとしても機能できることを利用した取得方法。
+         * SQL句のようにselect, where, orderBy, Limitなどを使って条件付きでデータを取得することができる。
+         */
+        $tweets = Tweet::orderBy('created_at', 'DESC')->get();
         return view('tweet.index')
         ->with('tweets', $tweets);
     }

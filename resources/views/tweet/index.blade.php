@@ -11,6 +11,20 @@
 
 <body>
     <h1>つぶやきアプリ</h1>
+    {{-- つぶやきが投稿できるフォーム（『プロフェッショナルWebプログラミング』p075の内容） --}}
+    <div>
+        <p>投稿フォーム</p>
+        <form action="{{ route('tweet.create') }}" method="POST">
+            @csrf
+            <label for="tweet-content">つぶやき</label>
+            <span>140文字まで</span>
+            <textarea name="tweet" id="tweet-content" placeholder="つぶやきを入力"></textarea>
+            @error('tweet')
+                <p style="color: red;">{{ $message }}</p>
+            @enderror
+            <button type="submit">投稿</button>
+        </form>
+    </div>
     <div>
         {{-- コントローラから渡された$tweetsを、@foreachで一つずつ取り出していく。$tweetsから$tweetを一つずつ取得し、そのcontentを表示する。 --}}
         @foreach ($tweets as $tweet)

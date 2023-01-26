@@ -24,14 +24,24 @@ Route::get('/', function () {
  * \App\Http\Controllers\Sample\IndexControllerコントローラのshowメソッドへルーティングされるという設定。
 */
 Route::get('/sample', [\App\Http\Controllers\Sample\IndexController::class, 'show']);
+
 /**
  * 『プロフェッショナルWebプログラミング for Laravel9』p043
  * URLの値を取得するshowIdメソッド
  * ルータで{id}と記述することでコントローラのメソッドの引数で$idを受け取れるようになる。
 */
 Route::get('/sample/{id}', [\App\Http\Controllers\Sample\IndexController::class, 'showId']);
+
 /**
  * 「/tweet」にリクエストがあった場合に、このコントローラへルーティングする
- * ※シングルアクションコントローラの場合は、ルーティングに対応するメソッド名は不要で、classのみ指定する
+ *  ・シングルアクションコントローラの場合は、ルーティングに対応するメソッド名は不要で、classのみ指定する
+ *  ・Routeには名前をつけることができ、別のコントローラーやBladeテンプレートからRouteを呼び出す際にパスではなく、その名前で指定できるようになる。
 */
-Route::get('/tweet', \App\Http\Controllers\Tweet\IndexController::class);
+Route::get('/tweet', \App\Http\Controllers\Tweet\IndexController::class)
+->name('tweet.index');
+
+/**
+ * 『プロフェッショナルWebプログラミング for Laravel9』p074
+ */
+Route::post('/tweet/create', \App\Http\Controllers\Tweet\CreateController::class)
+->name('tweet.create');
