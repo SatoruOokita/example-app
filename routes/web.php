@@ -18,9 +18,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 /**
-     * 『プロフェッショナルWebプログラミング for Laravel9』p042
-     *  
-     * /sampleにGETメソッドでリクエストされた場合に、
-     * \App\Http\Controllers\Sample\IndexControllerコントローラのshowメソッドへルーティングされるという設定。
-    */
+ * 『プロフェッショナルWebプログラミング for Laravel9』p042
+ *  
+ * /sampleにGETメソッドでリクエストされた場合に、
+ * \App\Http\Controllers\Sample\IndexControllerコントローラのshowメソッドへルーティングされるという設定。
+*/
 Route::get('/sample', [\App\Http\Controllers\Sample\IndexController::class, 'show']);
+/**
+ * 『プロフェッショナルWebプログラミング for Laravel9』p043
+ * URLの値を取得するshowIdメソッド
+ * ルータで{id}と記述することでコントローラのメソッドの引数で$idを受け取れるようになる。
+*/
+Route::get('/sample/{id}', [\App\Http\Controllers\Sample\IndexController::class, 'showId']);
+/**
+ * 「/tweet」にリクエストがあった場合に、このコントローラへルーティングする
+ * ※シングルアクションコントローラの場合は、ルーティングに対応するメソッド名は不要で、classのみ指定する
+*/
+Route::get('/tweet', \App\Http\Controllers\Tweet\IndexController::class);

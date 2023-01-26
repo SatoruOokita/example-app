@@ -17,4 +17,14 @@ class IndexController extends Controller
     {
         return 'Hello';
     }
+    /**
+     * 『プロフェッショナルWebプログラミング for Laravel9』p043
+     *  URLからの値を取得する
+     * @return string
+     * 
+    */
+    public function showId($id)
+    {
+        return "Hello {$id}";
+    }
 }
