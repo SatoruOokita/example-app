@@ -11,7 +11,12 @@
 
 <body>
     <h1>つぶやきアプリ</h1>
-    <p>{{ $name }}</p>
+    <div>
+        {{-- コントローラから渡された$tweetsを、@foreachで一つずつ取り出していく。$tweetsから$tweetを一つずつ取得し、そのcontentを表示する。 --}}
+        @foreach ($tweets as $tweet)
+            <p>{{ $tweet->content }}</p>
+        @endforeach
+    </div>
 </body>
 
 </html>
