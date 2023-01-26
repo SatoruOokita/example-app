@@ -45,3 +45,13 @@ Route::get('/tweet', \App\Http\Controllers\Tweet\IndexController::class)
  */
 Route::post('/tweet/create', \App\Http\Controllers\Tweet\CreateController::class)
 ->name('tweet.create');
+
+/**
+ * 『プロフェッショナルWebプログラミング for Laravel9』p085
+ *  ・編集ページをHTTPのGETで表示し、更新処理をPUTとしている。
+ *  ・メソッドチェーン「->where('tweetId', '[0-9]+')」で、tweetIdが整数値のものを受け付ける。
+ */
+Route::get('/tweet/update/{tweetId}', \App\Http\Controllers\Tweet\Update\IndexController::class)
+->name('tweet.update.index')->where('tweetId', '[0-9]+');
+Route::put('/tweet/update/{tweetId}', \App\Http\Controllers\Tweet\Update\PutController::class)
+->name('tweet.update.put')->where('tweetId', '[0-9]+');
