@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Tweet;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 // テキストp067の内容
 use App\Models\Tweet;
+// テキストp105の内容(TweetServiceのインポート)
+use App\Services\TweetService;
+use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
@@ -15,7 +17,7 @@ class IndexController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, TweetService $tweetService)
     {
         // return 'Single Action!';
         // return view('tweet.index', ['name' => 'Laravel(Tweet/IndexControllerのviewヘルパー関数に記述)']);
@@ -44,8 +46,17 @@ class IndexController extends Controller
          * Eloquentモデルがクエリビルダとしても機能できることを利用した取得方法。
          * SQL句のようにselect, where, orderBy, Limitなどを使って条件付きでデータを取得することができる。
          */
-        $tweets = Tweet::orderBy('created_at', 'DESC')->get();
+        // $tweets = Tweet::orderBy('created_at', 'DESC')->get();
+        // return view('tweet.index')
+        //     ->with('tweets', $tweets);
+
+        /**
+         * テキストp105の内容
+         * ・冒頭のuse命令で、TweetServiceクラスを利用できるようにししている。
+         * ・TweetServiceのインスタンスを作成し、つぶやきの一覧を取得
+         */
+        $tweets = $tweetService->getTweets();
         return view('tweet.index')
-        ->with('tweets', $tweets);
+            ->with('tweets', $tweets);
     }
 }
