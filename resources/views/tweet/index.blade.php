@@ -14,7 +14,11 @@
     {{-- つぶやきが投稿できるフォーム（『プロフェッショナルWebプログラミング』p075の内容） --}}
     <div>
         <p>投稿フォーム</p>
-<form action="{{ route('tweet.create') }}" method="POST">
+        {{-- 削除が成功した際の通知（『プロフェッショナルWebプログラミング』p096の内容） --}}
+        @if (session('feedback.success'))
+            <p style="color: green">{{ session('feedback.success') }}</p>
+        @endif
+        <form action="{{ route('tweet.create') }}" method="POST">
             @csrf
             <label for="tweet-content">つぶやき</label>
             <span>140文字まで</span>
@@ -37,6 +41,11 @@
                 <summary>{{ $tweet->content }}</summary>
                 <div>
                     <a href="{{ route('tweet.update.index', ['tweetId' => $tweet->id]) }}">編集</a>
+                    <form action="{{ route('tweet.delete', ['tweetId' => $tweet->id]) }}" method="post">
+                        @method('DELETE')
+                        @csrf
+                        <button type="submit">削除</button>
+                    </form>
                 </div>
             </details>
         @endforeach
