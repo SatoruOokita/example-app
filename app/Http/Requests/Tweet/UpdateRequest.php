@@ -32,4 +32,13 @@ class UpdateRequest extends FormRequest
     {
         return $this->input('tweet');
     }
+
+    /**
+     * idを取得できるメソッド
+     * ・この処理はコントローラに実装しても同じ動作をするが、RequestForm側に実装することでコントローラでの処理が簡略化される。
+     */
+    public function id(): int
+    {
+        return (int) $this->route('tweetId');
+    }
 }

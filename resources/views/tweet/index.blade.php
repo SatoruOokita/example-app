@@ -14,7 +14,7 @@
     {{-- つぶやきが投稿できるフォーム（『プロフェッショナルWebプログラミング』p075の内容） --}}
     <div>
         <p>投稿フォーム</p>
-        <form action="{{ route('tweet.create') }}" method="POST">
+<form action="{{ route('tweet.create') }}" method="POST">
             @csrf
             <label for="tweet-content">つぶやき</label>
             <span>140文字まで</span>
@@ -27,8 +27,18 @@
     </div>
     <div>
         {{-- コントローラから渡された$tweetsを、@foreachで一つずつ取り出していく。$tweetsから$tweetを一つずつ取得し、そのcontentを表示する。 --}}
-        @foreach ($tweets as $tweet)
+        {{-- @foreach ($tweets as $tweet)
             <p>{{ $tweet->content }}</p>
+        @endforeach --}}
+
+        {{-- テキストp093：一覧画面から編集画面へ遷移できるように導線を追加 --}}
+        @foreach ($tweets as $tweet)
+            <details>
+                <summary>{{ $tweet->content }}</summary>
+                <div>
+                    <a href="{{ route('tweet.update.index', ['tweetId' => $tweet->id]) }}">編集</a>
+                </div>
+            </details>
         @endforeach
     </div>
 </body>
