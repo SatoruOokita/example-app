@@ -10,6 +10,7 @@ class Kernel extends HttpKernel
      * The application's global HTTP middleware stack.
      *
      * These middleware are run during every request to your application.
+     * アプリケーション全体に作用させたいミドルウェアを登録するときは、ここに記述する。
      *
      * @var array<int, class-string|string>
      */
@@ -25,6 +26,7 @@ class Kernel extends HttpKernel
 
     /**
      * The application's route middleware groups.
+     * 特定のルートについてのみ作用させたいミドルウェアを登録するときには、ここに記述する。
      *
      * @var array<string, array<int, class-string|string>>
      */
@@ -36,6 +38,8 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\HandleInertiaRequests::class,
+            \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ],
 
         'api' => [
@@ -63,5 +67,9 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        /**
+         * テキストp116の内容
+         */
+        'sample' => \App\Http\Middleware\SampleMiddleware::class,
     ];
 }

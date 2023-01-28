@@ -22,6 +22,7 @@ class CreateController extends Controller
     {
         // テキストp080の内容
         $tweet = new Tweet;
+        $tweet->user_id = $request->userId();   // ここでUserIdを保存している
         $tweet->content = $request->tweet();
         $tweet->save();
         return redirect()->route('tweet.index');

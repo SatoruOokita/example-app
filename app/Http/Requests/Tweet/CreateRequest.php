@@ -25,8 +25,16 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'tweet' => 'required | max:140' 
+            'tweet' => 'required | max:140'
         ];
+    }
+
+    /**
+     * Requestクラスのuser関数で今自分がログインしているユーザーを取得
+     */
+    public function userId(): int
+    {
+        return $this->user()->id;
     }
 
     /**

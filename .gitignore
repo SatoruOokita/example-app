@@ -16,3 +16,7 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+# テキストp113の内容
+/public/css
+/public/js
