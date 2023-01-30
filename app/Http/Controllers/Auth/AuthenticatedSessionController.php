@@ -43,6 +43,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        // ログアウトしたら、「http://localhost/tweet」（ログイン画面）に遷移するように変更（テキストp160）
+        return redirect('/tweet');
     }
 }
