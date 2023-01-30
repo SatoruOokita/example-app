@@ -13,7 +13,7 @@
                 </div>
                 <div>
                     <!-- TODO 編集と削除 -->
-                    {{-- <x-tweet.options :tweetId="$tweet->id" :userId="$tweet->user_id"></x-tweet.options> --}}
+                    <x-tweet.options :tweetId="$tweet->id" :userId="$tweet->user_id"></x-tweet.options>
                 </div>
             </li>
         @endforeach
