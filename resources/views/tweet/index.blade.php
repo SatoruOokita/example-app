@@ -1,3 +1,6 @@
 <x-layout title="TOP | つぶやきアプリ">
-    <h1>ここに内容が入ります。</h1>
+    <x-layout.single>
+        <h2 class="text-center text-blue-500 text-4xl font-bold mt-8 mb-8">つぶやきアプリ</h2>
+        <x-tweet.form.post></x-tweet.form.post>
+    </x-layout.single>
 </x-layout>
