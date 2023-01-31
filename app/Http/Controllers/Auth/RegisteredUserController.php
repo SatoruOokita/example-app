@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
+// テキストp183の内容
+use App\Mail\NewUserIntroduction;
+use Illuminate\Contracts\Mail\Mailer;
+
 class RegisteredUserController extends Controller
 {
     /**
@@ -28,11 +32,11 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, Mailer $mailer): RedirectResponse
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -45,6 +49,10 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
+
+        // メールの送信処理を追加(p184)
+        $mailer->to('test@example.com')
+            ->send(new NewUserIntroduction());
 
         return redirect(RouteServiceProvider::HOME);
     }
