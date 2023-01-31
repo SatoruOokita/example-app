@@ -40,25 +40,40 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
+        // $user = User::create([
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'password' => Hash::make($request->password),
+        // ]);
+
+        // テキストp187
+        // App\Http\Mail\NewUserIntroduction.phpのコンストラクタを変更したため、変数を変更。
+        $newUser = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user));
+        event(new Registered($newUser));
 
-        Auth::login($user);
+        Auth::login($newUser);
 
         // メールの送信処理を追加(p184)
         // $mailer->to('test@example.com')
         //     ->send(new NewUserIntroduction());
 
         // 登録済みのユーザーを取得して、全員にメールを送る処理を追加(p185)
+        // $allUser = User::get();
+        // foreach ($allUser as $user) {
+        //     $mailer->to($user->email)
+        //         ->send(new NewUserIntroduction());
+        // }
+
+        // テキストp187
         $allUser = User::get();
         foreach ($allUser as $user) {
             $mailer->to($user->email)
-                ->send(new NewUserIntroduction());
+                ->send(new NewUserIntroduction($user, $newUser));
         }
 
         return redirect(RouteServiceProvider::HOME);
