@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 // テキストp065の内容
 use App\Models\Tweet;
+// テキストp226
+use App\Models\Image;
 
 class TweetsSeeder extends Seeder
 {
@@ -25,8 +27,13 @@ class TweetsSeeder extends Seeder
         //     'updated_at' => now(),
         // ]);
         /**
-         * テキストp065の内容
+         * テキストp065の内容（->create(）まで）と、テキストp226の内容（->each(fn($tweet）から先）
          */
-        Tweet::factory()->count(10)->create();
+        Tweet::factory()->count(10)->create()->each(
+            fn ($tweet) => Image::factory()->count(4)->create()->each(
+                fn ($image) =>
+                $tweet->images()->attach($image->id)
+            )
+        );
     }
 }
