@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Tweet\CreateRequest;
 // テキストp080の内容
 use App\Models\Tweet;
+// コントローラからサービスクラスを利用して画像付きのつぶやきを保存(p237)
+use App\Services\TweetService;
 
 class CreateController extends Controller
 {
@@ -18,13 +20,24 @@ class CreateController extends Controller
      * @return \Illuminate\Http\Response
      * __invokeメソッドの引数に、CreateRequestを指定して、p073で独自に拡張したFormRequestクラスをコントローラで利用する。
      */
-    public function __invoke(CreateRequest $request)
+    // public function __invoke(CreateRequest $request)
+    // {
+    // テキストp080の内容
+    //     $tweet = new Tweet;
+    //     $tweet->user_id = $request->userId();   // ここでUserIdを保存している
+    //     $tweet->content = $request->tweet();
+    //     $tweet->save();
+    //     return redirect()->route('tweet.index');
+    // }
+
+    // コントローラからサービスクラスを利用して画像付きのつぶやきを保存(p237)
+    public function __invoke(CreateRequest $request, TweetService $tweetService)
     {
-        // テキストp080の内容
-        $tweet = new Tweet;
-        $tweet->user_id = $request->userId();   // ここでUserIdを保存している
-        $tweet->content = $request->tweet();
-        $tweet->save();
+        $tweetService->saveTweet(
+            $request->userId(),
+            $request->tweet(),
+            $request->images()
+        );
         return redirect()->route('tweet.index');
     }
 }
