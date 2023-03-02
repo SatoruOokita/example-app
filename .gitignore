@@ -18,5 +18,5 @@ yarn-error.log
 /.vscode
 
 # テキストp113の内容
-/public/css
-/public/js
+# /public/css
+# /public/js
