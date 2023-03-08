@@ -7,6 +7,35 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## 作業手順の目次
+1. Virtualboxインストール
+2. Vagrantインストール
+3. 仮想マシンを立ち上げる(Vagrantfileを使う)
+4. リポジトリをクローン
+5. Docker環境を再現する
+6. .env.exampleをリネーム
+7. nginxの設定を仮想マシンに追加
+
+
+## 1. Virtualboxインストール
+
+## 2. Vagrantインストール
+
+## 3. 仮想マシンを立ち上げる(Vagrantfileを使う)
+
+## 4. リポジトリをクローン
+
+## 5. Docker環境を再現する
+
+## 6. .env.exampleをリネーム
+
+## 7. nginxの設定を仮想マシンに追加
+
+## 8. 
+
+
+
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
