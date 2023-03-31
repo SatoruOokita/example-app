@@ -1,7 +1,15 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
+# example-appのセットアップ
+## このアプリケーションについて
+このアプリケーションはLaravelの学習過程で作成したものです。  
+使用した参考書は「プロフェッショナルWebプログラミング Laravel9」です。
 
-※ Mailhogのインストールができていないため、会員登録を行うとエラー画面になる。
+主な機能は、140文字以内のつぶやきを表示することです。
+
+### 注意
+※ Mailhogのインストールができていないため、会員登録を行うとエラー画面になります。
+※画像をアップロードしても正しく表示されない状態です。
 
 ## 1. インストール作業
 ### 1-1. Virtualboxインストール
