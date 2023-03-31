@@ -1,22 +1,5 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-# 作業手順
-## 1. インストール作業
-### 1-1. Virtualboxインストール  
-### 1-2. Vagrantインストール  
-
-## 2. 仮想マシンを立ち上げる  
-## 3. 仮想マシンにログインする
-## 4. nginxの設定を仮想マシンに追加  
-## 5. 設定ファイルのシンボリックリンクの作成  
-## 6. デフォルトのシンボリックリンクの削除  
-## 7. mysqlにユーザーを追加  
-## 8. アプリケーションを仮想マシンへ送る  
-## 9. example-appのユーザーをwww-dataに変更   
-## 10. .envファイルの編集
-## 11. Composer install を実行  
-## 12. データベースの作成
-## 13. ホストOS側からブラウザでアプリケーションを表示  
 
 ※ Mailhogのインストールができていないため、会員登録を行うとエラー画面になる。
 
