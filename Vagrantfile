@@ -57,23 +57,9 @@ Vagrant.configure("2") do |config|
     config.vm.provision "shell", inline: <<-SHELL
     apt-get update
     apt-get install -y  php8.1-fpm \
-                        php-calendar php-Core php-ctype php-curl \
-                        php-date php-dom \
-                        php-exif \
-                        php-FFI php-fileinfo php-filter php-ftp \
-                        php-gettext \
-                        php-hash \
-                        php-iconv php-intl \
-                        php-json \
-                        php-libxml \
-                        php-mbstring \
-                        php-openssl php8.1-opcache\
-                        php-pcntl php-pcre php-PDO php-Pharvagrant php-posix \
-                        php-readline php-Reflection \
-                        php-session php-shmop php-SimpleXML php-sockets php-sodium php-SPL php-standard php-sysvmsg php-sysvsem \
-                        php-tokenizer \
-                        php-xml php-xmlreader php-xmlwriter php-xsl \
-                        php-Zend php-zip php-zlib \
+                        php-curl php-date php-intl php-json php-mbstring \
+                        php8.1-opcache \
+                        php-readline php-tokenizer php-xml php-zip \
                         nginx \
                         composer \
                         mysql-server 
