@@ -67,16 +67,16 @@ Vagrant.configure("2") do |config|
                         php-json \
                         php-libxml \
                         php-mbstring \
-                        php-openssl \
+                        php-openssl php8.1-opcache\
                         php-pcntl php-pcre php-PDO php-Pharvagrant php-posix \
                         php-readline php-Reflection \
                         php-session php-shmop php-SimpleXML php-sockets php-sodium php-SPL php-standard php-sysvmsg php-sysvsem \
                         php-tokenizer \
                         php-xml php-xmlreader php-xmlwriter php-xsl \
-                        php-Zend OPcache php-zip php-zlib \
+                        php-Zend php-zip php-zlib \
                         nginx \
                         composer \
-                        mysql-server \
+                        mysql-server 
     service nginx restart
     service php8.1-fpm start
     SHELL
