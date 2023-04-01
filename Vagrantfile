@@ -57,7 +57,7 @@ Vagrant.configure("2") do |config|
     config.vm.provision "shell", inline: <<-SHELL
     apt-get update
     apt-get install -y  php8.1-fpm \
-                        php-curl php-date php-intl php-json php-mbstring \
+                        php-curl php-date php-intl php-json php-mbstring php-mysql \
                         php8.1-opcache \
                         php-readline php-tokenizer php-xml php-zip \
                         nginx \

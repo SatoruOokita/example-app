@@ -122,15 +122,14 @@
 次に、mysqlにログインした状態で以下のコマンドを実行し、testというユーザーを追加します。
 
     CREATE USER 'test'@'localhost' IDENTIFIED BY 'Password@0000';
-
-先ほど作成したユーザー(test)でmysqlにアクセスできるかを確認します。
-
-    mysql -u test -p
-
-上のコマンドでmysqlにアクセスすることができたら。  
+  
 以下のコマンドを実行して、ユーザー(test)にDBへのアクセス権限を与えてください。
 
     GRANT ALL PRIVILEGES ON *.* TO 'test'@'localhost';
+
+先ほど作成したユーザー(test)でmysqlにアクセスできるかを確認しておきましょう。
+
+    mysql -u test -p
 
 ## 8. アプリケーション(example-app)を仮想マシンへ送る  
 自身が作業しやすい方法でアプリケーション(example-app)をnginxのドキュメントルート(var/www/html)へ配置してください。  
