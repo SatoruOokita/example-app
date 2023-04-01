@@ -127,9 +127,20 @@
 
     GRANT ALL PRIVILEGES ON *.* TO 'test'@'localhost';
 
+変更した設定内容を反映させるために、権限をリロードします。以下のコマンドを実行してください。
+
+    FLUSH PRIVILEGES;
+
+最後に、MySQLのコマンドラインクライアントを終了します。以下のコマンドを実行してください。
+
+    exit
+
 先ほど作成したユーザー(test)でmysqlにアクセスできるかを確認しておきましょう。
+以下のコマンドを実行するとパスワードの入力が求められるので、Password@0000と入力するか、自身で設定したパスワードを入力してください。
 
     mysql -u test -p
+
+mysqlに入ることができれば、問題ありません。再度exitと入力して抜けてください。
 
 ## 8. アプリケーション(example-app)を仮想マシンへ送る  
 自身が作業しやすい方法でアプリケーション(example-app)をnginxのドキュメントルート(var/www/html)へ配置してください。  
@@ -169,7 +180,21 @@ nginxのドキュメントルートのユーザーが www:data なので、ア�
 #### Vimで.envファイルを開く
     sudo vi .env
 
+#### .envファイルのMysqlの設定
+.envファイルを開いたら、以下の設定のコメントアウトを解除してください。
+Vimでファイルの中身を編集する際には「i」を1回クリックします。すると編集モードになります。 
+
+    # デプロイ環境でのDB設定（この行はコメントアウトのまま）
+    #DB_CONNECTION=mysql
+    #DB_HOST='localhost'
+    #DB_PORT=3306
+    #DB_DATABASE=example_app
+    #DB_USERNAME=test
+    #DB_PASSWORD=Password@0000
+
 #### 変更を保存してVimを閉じる
+Vimで編集モードを閉じるには、escキーを押してから、次のコマンドを入力します。
+
     :wq
 
 自身で用意した仮想環境で作業を行う場合は、各仮想マシンの要件を満たす形で .envファイルを用意してください。内容については.env.exampleファイルを参照してください。
