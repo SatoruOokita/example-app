@@ -114,6 +114,10 @@
 
     sudo rm /etc/nginx/sites-enabled/default
 
+シンボリックリンクを削除したら、一度nginxを再起動させておきましょう。
+
+    sudo systemctl restart nginx
+
 ## 7. mysqlにユーザー(test)を追加  
 まず、mysqlにsudoを使ってログインします。
 
