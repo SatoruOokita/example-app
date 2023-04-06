@@ -23,18 +23,17 @@
 自分が使うOSに適したVagrantをインストールしてください。([Install Vagrant](https://developer.hashicorp.com/vagrant/downloads))  
 
 ## 2. 仮想マシンを立ち上げる(Vagrantfileを使う)
-インストール作業が終わったら仮想マシンの立ち上げを行っていきます。
+インストール作業が終わったら仮想マシンの立ち上げを行っていきます。  
 
-### 2-1. 仮想マシンを立ち上げるディレクトリを用意する
-仮想マシンを立ち上げたいディレクトリへ移動（もしくはディレクトリを作成）します。  
-次に、example-appのルートディレクトリにあるVagrantfileと同じ内容のVagrantfileを、仮想マシンを立ち上げるディレクトリ内に用意します。(コピペOK)
-
-### 2-2. コマンドを実行して仮想マシンを立ち上げる
+### 2-1. example-appのルートディレクトリへ移動する
 コマンドプロンプト(Windows)やターミナル(MacOS)を開き、Vagrantfileが存在するディレクトリへ移動しておきましょう。  
 
     cd "Path to the Directory"
 
 移動ができたら次のコマンドを実行して仮想マシンを立ち上げてください。
+
+### 2-2. 仮想マシンを立ち上げる
+次のコマンドを実行します。
 
     vagrant up
 
@@ -146,18 +145,27 @@
 
 mysqlに入ることができれば、問題ありません。再度exitと入力して抜けてください。
 
-## 8. アプリケーション(example-app)を仮想マシンへ送る  
-自身が作業しやすい方法でアプリケーション(example-app)をnginxのドキュメントルート(var/www/html)へ配置してください。  
-例として、Vagrantの共有フォルダを用いて nginxのドキュメントルートへアプリケーションを配置する手順を示します。
+## 8. アプリケーション(example-app)をnginxのドキュメンルートへ配置する  
+ホストOS側で『vagrant up』コマンドを実行したことで、example-appは仮想マシン側では /vagrant となっています。  
+次のコマンドを実行すると、example-appのルートディレクトリと同じ内容が表示されるはずです。
 
-### 共有フォルダを使う方法
-まず、ホストOS側で『vagrant up』コマンドを実行したディレクトリに example-appを配置します。  
-これで仮想マシン側の /vagrantディレクトリにも example-appを配置することができています。  
+    ls -al /vagrant 
 
-次にexample-appをnginxのドキュメントルートへ移動させます。  
-仮想マシンにログインしている状態で、以下のコマンドを実行してください。
+それでは、この/vagrantディレクトリ（example-app）をnginxのドキュメントルートへ配置させていきましょう。
+### 8-1. /vagrantディレクトリ（example-app）のコピーを作成
+まず、仮想マシンにログインしている状態で、以下のコマンドを実行してください。
 
-    sudo mv /vagrant/example-app /var/www/html
+    sudo cp -r /vagrant /var/www/html/
+
+すると/vagrantディレクトリ（example-app）が、/var/www/html/ディレクトリにコピーされます。
+次のコマンドでvagrantディレクトリがコピーされたのかを確認できます。vagrantというディレクトリが追加されているはずです。
+
+    ls -al /var/www/html
+
+### 8-2. vagrantディレクトリの名前を変更
+次のコマンドを実行して、vagrantディレクトリの名前をexample-appに変更しましょう。
+
+    sudo mv /var/www/html/vagrant/ /var/www/html/example-app
 
 すると /vagrantディレクトリにあったexample-appが /var/www/htmlディレクトリへ移動しています。
 
@@ -165,6 +173,8 @@ mysqlに入ることができれば、問題ありません。再度exitと入�
 nginxのドキュメントルートのユーザーが www:data なので、アプリケーションのユーザーも www:data に変更しておきます。
 
     sudo chown -R www-data:www-data /var/www/html/example-app
+
+これで、nginxのドキュメントルートにexample-appを配置することができました。
 
 ## 10. .envファイルの編集  
 ここから先の作業は、アプリケーション(example-app)のルートディレクトリで行います。  
