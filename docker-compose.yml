@@ -92,12 +92,16 @@ services:
             retries: 3
             timeout: 5s
     mailhog:
-        image: 'mailhog/mailhog:latest'
+        #image: 'mailhog/mailhog:latest'
+        #image: ghcr.io/klutchell/mailhog:latest
+        image: mplatform/mquery:latest
+        command: ["mquery", "mailhog/mailhog"]
         ports:
             - '${FORWARD_MAILHOG_PORT:-1025}:1025'
             - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
         networks:
             - sail
+
     selenium:
         # image: 'selenium/standalone-chrome'
         image: 'seleniarm/standalone-chromium'
