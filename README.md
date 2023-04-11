@@ -227,7 +227,7 @@ Vimで編集モードを閉じるには、escキーを押してから、次の�
 ## 11. Composer install を実行  
 アプリケーションのルートディレクトリで次のコマンドを実行してライブラリをインストールします。
 
-    sudo -u www-data composer install
+    sudo -u www-data composer install --no-dev
 
 ## 12. データベースの作成
 example-appのルートディレクトリで以下のコマンドを実行します。
