@@ -146,8 +146,8 @@
 mysqlに入ることができれば、問題ありません。再度exitと入力して抜けてください。
 
 ## 8. アプリケーション(example-app)をnginxのドキュメンルートへ配置する  
-ホストOS側で『vagrant up』コマンドを実行したことで、example-appは仮想マシン側では /vagrant となっています。  
-次のコマンドを実行すると、example-appのルートディレクトリと同じ内容が表示されるはずです。
+『vagrant up』コマンドを実行したことで、ホストOS側のexample-appディレクトリは、仮想マシン側では `/vagrant` となっています。  
+次のコマンドを仮想マシンで実行すると、example-appのルートディレクトリと同じ内容が表示されるはずです。
 
     ls -al /vagrant 
 
@@ -227,42 +227,63 @@ Vimで編集モードを閉じるには、escキーを押してから、次の�
 ## 11. Composer install を実行  
 アプリケーションのルートディレクトリで次のコマンドを実行してライブラリをインストールします。
 
-    sudo composer install
+    sudo -u www-data composer install
 
 ## 12. データベースの作成
 example-appのルートディレクトリで以下のコマンドを実行します。
 
-    php artisan migrate
+    sudo -u www-data php artisan migrate
 
 コマンドが走ると「新しく example_appというデータベースを作成するか？」と聞かれます。  
 yes と答えてアプリケーションのデータベースを作成してください。
 
 以下のコマンドを実行するとダミーのデータを挿入することができます。
 
-    php artisan db:seed
+    sudo -u www-data php artisan db:seed
 
 また、次のコマンドも実行して画像をブラウザで表示できるようにしてください。
 
-    php artisan storage:link
+    sudo -u www-data php artisan storage:link
 
 これで、つぶやきに紐づいた画像を表示することができるようになります。
 
 ## 13. メール送信機能を追加
 ### 13-1. MailHogのインストール
-以下のコマンドを1行ずつ実行して、MailHogをインストールしてください。
+MailHogをインストールする前に、最新のパッケージ情報を利用できるようにします。
 
     sudo apt-get update
+
+### 13-2. Go言語の実行環境をインストール
+MailhogはGo言語で開発されているため、実行にはGoの実行環境が必要です。
+
     sudo apt-get install golang-go
+
+### 13-3. Mailhogのインストール
+カレントディレクトリに書き込み権限を与えます。
+
+    sudo chmod 777 .
+
+次のコマンドで指定されたURLからMailhogのバイナリファイルをダウンロードします。  
+ここでは、バージョン1.0.1のLinux用のMailhogのバイナリがダウンロードされます。
+
     wget https://github.com/mailhog/MailHog/releases/download/v1.0.1/MailHog_linux_amd64
+    
+### 13-4. Mailhogを実行
+ダウンロードしたMailhogバイナリに実行権限を付与することで、バイナリを実行可能な状態に変更します。
+
     sudo chmod +x MailHog_linux_amd64
+
+次のコマンドでMailhogバイナリを`/usr/local/bin`ディレクトリへ移動させ、ファイル名を`mailhog`に変更します。  
+`/usr/lical/bin`ディレクトリに置かれた実行ファイルは、システム全体で利用できるため、この操作によりMailhogをどこからでも実行できるようになります。
+
     sudo mv MailHog_linux_amd64 /usr/local/bin/mailhog
 
-### 13-2. MailHogの起動と設定
+### 13-5. MailHogの起動と設定
 MailHogを起動を起動します。以下のコマンドを実行してください。
 
     mailhog &
 
-### 13-3. Laravelの.envファイルにMailHogの設定を追加
+### 13-6. Laravelの.envファイルにMailHogの設定を追加
 .envファイルのメール設定を以下の内容に変更してください。
 
     MAIL_MAILER=smtp
