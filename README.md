@@ -229,7 +229,7 @@ Vimで編集モードを閉じるには、escキーを押してから、次の�
 
     sudo composer install
 
-### 12. データベースの作成
+## 12. データベースの作成
 example-appのルートディレクトリで以下のコマンドを実行します。
 
     php artisan migrate
@@ -247,7 +247,43 @@ yes と答えてアプリケーションのデータベースを作成してく�
 
 これで、つぶやきに紐づいた画像を表示することができるようになります。
 
-## 13. ホストOS側からブラウザでアプリケーションを表示  
+## 13. メール送信機能を追加
+### 13-1. MailHogのインストール
+以下のコマンドを1行ずつ実行して、MailHogをインストールしてください。
+
+    sudo apt-get update
+    sudo apt-get install golang-go
+    wget https://github.com/mailhog/MailHog/releases/download/v1.0.1/MailHog_linux_amd64
+    sudo chmod +x MailHog_linux_amd64
+    sudo mv MailHog_linux_amd64 /usr/local/bin/mailhog
+
+### 13-2. MailHogの起動と設定
+MailHogを起動を起動します。以下のコマンドを実行してください。
+
+    mailhog &
+
+### 13-3. Laravelの.envファイルにMailHogの設定を追加
+.envファイルのメール設定を以下の内容に変更してください。
+
+    MAIL_MAILER=smtp
+    MAIL_HOST=localhost
+    MAIL_PORT=1025
+    MAIL_USERNAME=null
+    MAIL_PASSWORD=null
+    MAIL_ENCRYPTION=null
+    MAIL_FROM_ADDRESS=your_email@example.com
+    MAIL_FROM_NAME="${APP_NAME}"
+
+以上で、Mailhogをexample-appに実装することができました。
+
+メールが正しく送信されているかを確認する際には、  
+会員登録の作業を行ってから、以下のipアドレスにアクセスします。
+
+    192.168.56.56:8025
+
+Mailhogの管理画面でメールを受信しているかどうかを確認できます。
+
+## 14. ホストOS側からブラウザでアプリケーションを表示  
 ホストOSのブラウザで仮想マシンのIPアドレスを入力すればアプリケーションを確認することができます。  
 
     IPアドレス：192.168.56.56
