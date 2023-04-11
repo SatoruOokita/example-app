@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SeatingController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +73,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/tweet/delete/{tweetId}', \App\Http\Controllers\Tweet\DeleteController::class)
         ->name('tweet.delete');
 });
+
+# 席替えアプリ
+Route::get('/sekigae', [SeatingController::class, 'index'])->name('sekigae.index');
+Route::post('/sekigae/generate', [SeatingController::class, 'generate'])->name('sekigae.generate');
+Route::get('/sekigae/show', [SeatingController::class, 'show'])->name('sekigae.show');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
