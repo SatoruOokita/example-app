@@ -249,26 +249,16 @@ yes と答えてアプリケーションのデータベースを作成してく�
 
 ## 13. メール送信機能を追加
 ### 13-1. MailHogのインストール
-MailHogをインストールする前に、最新のパッケージ情報を利用できるようにします。
+MailHogをインストールする前に、最新のパッケージ情報を利用できるようにします。以下のコマンドを実行してください。
 
     sudo apt-get update
-
-### 13-2. Go言語の実行環境をインストール
-MailhogはGo言語で開発されているため、実行にはGoの実行環境が必要です。
-
-    sudo apt-get install golang-go
-
-### 13-3. Mailhogのインストール
-カレントディレクトリに書き込み権限を与えます。
-
-    sudo chmod 777 .
 
 次のコマンドで指定されたURLからMailhogのバイナリファイルをダウンロードします。  
 ここでは、バージョン1.0.1のLinux用のMailhogのバイナリがダウンロードされます。
 
-    wget https://github.com/mailhog/MailHog/releases/download/v1.0.1/MailHog_linux_amd64
+    sudo -u www-data wget https://github.com/mailhog/MailHog/releases/download/v1.0.1/MailHog_linux_amd64
     
-### 13-4. Mailhogを実行
+### 13-2. Mailhogを実行
 ダウンロードしたMailhogバイナリに実行権限を付与することで、バイナリを実行可能な状態に変更します。
 
     sudo chmod +x MailHog_linux_amd64
@@ -278,12 +268,12 @@ MailhogはGo言語で開発されているため、実行にはGoの実行環境
 
     sudo mv MailHog_linux_amd64 /usr/local/bin/mailhog
 
-### 13-5. MailHogの起動と設定
+### 13-3. MailHogの起動
 MailHogを起動を起動します。以下のコマンドを実行してください。
 
     mailhog &
 
-### 13-6. Laravelの.envファイルにMailHogの設定を追加
+### 13-4. Laravelの.envファイルにMailHogの設定を追加
 .envファイルのメール設定を以下の内容に変更してください。
 
     MAIL_MAILER=smtp
