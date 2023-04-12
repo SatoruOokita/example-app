@@ -273,7 +273,7 @@ MailHogを起動を起動します。以下のコマンドを実行してくだ�
 
     mailhog &
 
-### 13-5. Laravelの.envファイルにMailHogの設定を追加
+### 13-4. Laravelの.envファイルにMailHogの設定を追加
 .envファイルのメール設定を以下の内容に変更してください。
 
     MAIL_MAILER=smtp
