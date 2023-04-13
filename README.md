@@ -26,7 +26,7 @@
 ## 0. 「インストール作業」の前に
 本ReadMeは、仮想環境をVagrantで用意し、そこでアプリケーションを動作させることを念頭に作成しています。
 
-ローカルの開発環境で動作させる場合には、手順0-1~手順0-5を参考に作業を進めてプロジェクトを立ち上げてください。
+ローカルの開発環境で動作させる場合には、手順0-1~0-5を参考に作業を進めてプロジェクトを立ち上げてください。
 
 ※Windowsマシンで作業を行う場合は、[WSL](https://learn.microsoft.com/ja-jp/windows/wsl/install)環境とDocker [Desktop](https://docs.docker.com/desktop/install/windows-install/)を用意し、WSLのターミナルで作業を進めてください。
 
@@ -58,9 +58,9 @@ Laravel Sailを使用して、Dockerコンテナを起動します。
     ./vendor/bin/sail up
 
 #### ※`could not open input file`エラーが発生した場合
-`composer.json`を確認すると、既にLaravel Sailがインストールされているのに`./vendor/bin/sail up`コマンドを実行した際に`could not open input file`エラーが発生することがありました。
+`composer.json`にLaravel Sailをインストールするように記述しているにも関わらず`./vendor/bin/sail up`コマンドを実行した際に`could not open input file`エラーが発生することがありました。
 
-そのようなことが起こった場合には、次のコマンドを実行してlaravel/sailパッケージをインストールし直してから、再度`./vendor/bin/sail up`コマンドを実行してください。
+そのような場合には、次のコマンドを実行してlaravel/sailパッケージをインストールし直してから、再度`./vendor/bin/sail up`コマンドを実行してください。
 
     composer require laravel/sail --dev
 
@@ -86,11 +86,12 @@ Laravel Sailを使用して、Dockerコンテナを起動します。
 移動ができたら次のコマンドを実行して仮想マシンを立ち上げてください。
 
 ### 2-2. 仮想マシンを立ち上げる
-次のコマンドを実行します。
+仮想マシンを立ち上げるコマンドを実行します。
 
     vagrant up
 
-すると、Vagrantfileの内容に従って仮想マシン（ubuntu）が立ち上がります。  
+Vagrantfileの内容に従って仮想マシン（ubuntu）が立ち上がります。 (数分かかる場合があります。)
+
 仮想マシンが立ち上がっているかどうかは次のコマンドで確認します。
 
     vagrant status
@@ -98,23 +99,22 @@ Laravel Sailを使用して、Dockerコンテナを起動します。
 「running」と表示されたら仮想マシンは立ち上がっているので、次の手順でssh接続をします。
 
 ## 3. 仮想マシンにログインする 
-次のコマンドを実行すると仮想マシンにログインすることができます。
+仮想マシンにログインしましょう。
 
     vagrant ssh
 
 コマンドプロンプトの「ユーザー名@ホスト名」が、「vagrant@ubuntu-jammy」になればログイン成功です。
 
 ## 4. アプリケーションを `/var/www/html`ディレクトリへ配置する  
-仮想マシンにログインできたら、まずはアプリケーションを `/var/www/html`ディレクトリへ移動させましょう。
+仮想マシンにログインできたら、まずはアプリケーションを `/var/www/html`ディレクトリへ移動させます。
 
 なお、ここ（Vagrantを利用する場合）ではLaravelアプリケーション名は`example-app`とし、デプロイ先を`/var/www/html/example-app`として作業を進めていきます。
 
 ### 4-1. アプリケーションを確認
 ホストOS側のexample-appディレクトリは、仮想マシン側では `/vagrant` となっています。  
+次のコマンドを実行すると、example-appのルートディレクトリと同じ内容が表示されるはずです。
 
     ls -al /vagrant 
-
-上のコマンドを実行すると、example-appのルートディレクトリと同じ内容が表示されるはずです。
 
 ### 4-2. アプリケーションを移動（コピー）
 それでは、この/vagrantディレクトリ（example-app）を`/var/www/html/`ディレクトリへ配置しましょう。以下のコマンドを実行してください。
@@ -131,13 +131,20 @@ Laravel Sailを使用して、Dockerコンテナを起動します。
 ## 5. nginxの設定を仮想マシンに追加  
 デフォルトの設定の場合、nginxのドキュメントルートは`/var/www/html/index.nginx-debian.html`です。
 
-`example-app/public`がnginxのドキュメントルートとなるように設定を変更していきましょう。テキストエディターは各々好みのものを使ってください。 
+`example-app/public`がnginxのドキュメントルートとなるように設定を変更していきましょう。テキストエディターは好みのものを使ってください。 
 
 `/etc/nginx/sites-available` ディレクトリに、`example.com`というファイルを作成し、以下の設定内容を貼り付けてください。  
 
-※Vimを用いた作業手順の例を example.comの内容の後に記しておきます。
+※Vimを用いた作業手順の例を記しておきます。
 
-### /etc/nginx/sites-available/example.comの内容
+### Vimを使った作業例
+次のコマンドを実行して `example.com`というファイルを作成してvimを開きます。
+
+    sudo vi /etc/nginx/sites-available/example.com
+
+vimが立ち上がったら以下の「/etc/nginx/sites-available/example.comの内容」をコピーして貼り付けます。
+
+#### /etc/nginx/sites-available/example.comの内容
     server {
         listen 80;
         listen [::]:80;
@@ -172,18 +179,12 @@ Laravel Sailを使用して、Dockerコンテナを起動します。
         }
     }
 
-### Vimを使った作業の例
-次のコマンドを実行して `example.com`というファイルを作成してvimを開きます。
-
-    sudo vi /etc/nginx/sites-available/example.com
-
-vimが立ち上がったら上記の「/etc/nginx/sites-available/example.comの内容」を丸ごと貼り付けます。
 貼り付けることができたら、次の命令をVimに出して変更を保存した上でVimを閉じます。
 
     :wq
 
 ## 6. 設定ファイルのシンボリックリンクの作成  
-次のコマンドを実行して、先ほど作成したnginxの設定ファイルのシンボリックリンクを `sites-enabled`ディレクトリに作成します。
+次のコマンドを実行して、先ほど新しく作成したnginxの設定ファイルのシンボリックリンクを `sites-enabled`ディレクトリに作成します。
 
     sudo ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/
 
@@ -198,7 +199,7 @@ vimが立ち上がったら上記の「/etc/nginx/sites-available/example.comの
 
 ## 8. MySQLにユーザー(test)を追加  
 `Vagrant up`実行時にMySQLをインストールしています。  
-データベースを利用できるように、MySQLの設定を行っていきましょう。
+データベースを利用できるよう、MySQLの設定を行っていきましょう。
 
 ### 8-1. MySQLにログイン
 mysqlにsudoを使ってログインします。
@@ -245,28 +246,20 @@ nginxのユーザーが `www:data` なので、アプリケーションのユー
 
 ## 11. .envファイルの編集  
 ### 11-1. .env.exampleファイルの名前を.envに変更
-このReadMe通りに仮想マシンを立ち上げている場合は .env.exampleのファイル名を .envに名前を変更しておきましょう。次のコマンドを実行します。
+.env.exampleのファイル名を .envに名前を変更しておきましょう。次のコマンドを実行します。
 
     sudo mv .env.example .env
 
+`.env`ファイルを編集し、自分の環境に適した設定を行ってください。
+なお、`.env.example.production`に本番環境で動作する設定を記しているので適時ご利用ください。
+
 ### 11-2. .envファイルの内容を変更
-各々で自分の環境に適した設定を行ってください。
 
-以下は`.env`ファイルの例です。  
-コピー&ペーストで利用して
+    sudo vi .env
 
-#### .envの内容
-    APP_NAME=Laravel
-    APP_ENV=local
-    APP_KEY=base64:o6AMaz0Sska5mQ4mD1lkof6XeJgEA8VDazWQKqYMLX8=
-    APP_DEBUG=false
-    APP_URL=http://localhost
+変更するのは、データベースとメールセクションの２箇所です。
 
-    LOG_CHANNEL=stack
-    LOG_DEPRECATIONS_CHANNEL=null
-    LOG_LEVEL=debug
-
-    # デプロイ環境でのDB設定
+#### データベースの設定内容
     DB_CONNECTION=mysql
     DB_HOST='localhost'
     DB_PORT=3306
@@ -274,20 +267,7 @@ nginxのユーザーが `www:data` なので、アプリケーションのユー
     DB_USERNAME=test
     DB_PASSWORD=Password@0000
 
-    BROADCAST_DRIVER=log
-    CACHE_DRIVER=file
-    FILESYSTEM_DISK=local
-    QUEUE_CONNECTION=sync
-    #QUEUE_CONNECTION=database   # テキストp199。Queueをデータベースで管理する。
-    SESSION_DRIVER=file
-    SESSION_LIFETIME=120
-
-    MEMCACHED_HOST=memcached
-
-    REDIS_HOST=redis
-    REDIS_PASSWORD=null
-    REDIS_PORT=6379
-
+#### メール機能の設定内容（Mailhogを利用）
     MAIL_MAILER=smtp
     MAIL_HOST=localhost
     MAIL_PORT=1025
@@ -297,42 +277,18 @@ nginxのユーザーが `www:data` なので、アプリケーションのユー
     MAIL_FROM_ADDRESS="hello@example.com"
     MAIL_FROM_NAME="${APP_NAME}"
 
-    AWS_ACCESS_KEY_ID=
-    AWS_SECRET_ACCESS_KEY=
-    AWS_DEFAULT_REGION=us-east-1
-    AWS_BUCKET=
-    AWS_USE_PATH_STYLE_ENDPOINT=false
-
-    PUSHER_APP_ID=
-    PUSHER_APP_KEY=
-    PUSHER_APP_SECRET=
-    PUSHER_HOST=
-    PUSHER_PORT=443
-    PUSHER_SCHEME=https
-    PUSHER_APP_CLUSTER=mt1
-
-    # https://chigusa-web.com/blog/vite-to-mix/を参考にしてMixに関する記述を追加
-    MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
-    MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
-
-    SCOUT_DRIVER=meilisearch
-    MEILISEARCH_HOST=http://meilisearch:7700
-
-#### .envの設定内容について
-.envの内容について記しておきます。
-
-- デバックモードはオフになっている
-- DBの設定は本ReadMeに沿っている
-- Mailhogを利用できるように設定を変更している
-
-## 12. composer.json
-
 ## 12. Composer install を実行  
-アプリケーションのルートディレクトリで次のコマンドを実行してライブラリをインストールします。
+次のコマンドを実行し、パッケージをインストールしましょう。
 
     sudo -u www-data composer install --optimize-autoloader --no-dev
 
+### ※composer.jsonについて
+通常、Fakerはテストやシーディングに使用されるため、本番環境で利用することは推奨されません。
+
+ただし今回は、つぶやき内容を表示させるために`composer.json`ファイルの`"require"`セクションに`"fakerphp/faker": "^1.9.1"`を書き足しています。
+
 ## 13. データベースの作成
+### 13-1. マイグレーションを実行
 example-appのルートディレクトリで以下のコマンドを実行します。
 
     sudo -u www-data php artisan migrate
@@ -340,18 +296,20 @@ example-appのルートディレクトリで以下のコマンドを実行しま
 コマンドが走ると「新しく example_appというデータベースを作成するか？」と聞かれます。  
 yes と答えてアプリケーションのデータベースを作成してください。
 
+### 13-2. ダミーデータの挿入
 以下のコマンドを実行するとダミーのデータを挿入することができます。
 
     sudo -u www-data php artisan db:seed
 
+### 13-3. 画像を表示
 また、次のコマンドも実行して画像をブラウザで表示できるようにしてください。
 
     sudo -u www-data php artisan storage:link
 
-これで、つぶやきに紐づいた画像を表示することができるようになります。
+これで、`/storage`ディレクトリに格納されている画像を表示できるようになります。
 
-## 13. メール送信機能を追加
-### 13-1. MailHogのインストール
+## 14. メール送信機能を追加
+### 14-1. MailHogのインストール
 MailHogをインストールする前に、最新のパッケージ情報を利用できるようにします。以下のコマンドを実行してください。
 
     sudo apt-get update
@@ -361,7 +319,7 @@ MailHogをインストールする前に、最新のパッケージ情報を利�
 
     sudo -u www-data wget https://github.com/mailhog/MailHog/releases/download/v1.0.1/MailHog_linux_amd64
     
-### 13-2. Mailhogを実行
+### 14-2. Mailhogを実行
 ダウンロードしたMailhogバイナリに実行権限を付与することで、バイナリを実行可能な状態に変更します。
 
     sudo chmod +x MailHog_linux_amd64
@@ -371,35 +329,21 @@ MailHogをインストールする前に、最新のパッケージ情報を利�
 
     sudo mv MailHog_linux_amd64 /usr/local/bin/mailhog
 
-### 13-3. MailHogの起動
+### 14-3. MailHogの起動
 MailHogを起動を起動します。以下のコマンドを実行してください。
 
     mailhog &
 
-### 13-4. Laravelの.envファイルにMailHogの設定を追加
-.envファイルのメール設定を以下の内容に変更してください。
+### 14-4. メール機能の確認
+メールが正しく送信されているかをMailhogで確認する際には、会員登録の作業を行ってから、以下のURLにアクセスします。
 
-    MAIL_MAILER=smtp
-    MAIL_HOST=localhost
-    MAIL_PORT=1025
-    MAIL_USERNAME=null
-    MAIL_PASSWORD=null
-    MAIL_ENCRYPTION=null
-    MAIL_FROM_ADDRESS=your_email@example.com
-    MAIL_FROM_NAME="${APP_NAME}"
-
-以上で、Mailhogをexample-appに実装することができました。
-
-メールが正しく送信されているかを確認する際には、  
-会員登録の作業を行ってから、以下のipアドレスにアクセスします。
-
-    192.168.56.56:8025
+    http://192.168.56.56:8025
 
 Mailhogの管理画面でメールを受信しているかどうかを確認できます。
 
-## 14. ホストOS側からブラウザでアプリケーションを表示  
-ホストOSのブラウザで仮想マシンのIPアドレスを入力すればアプリケーションを確認することができます。  
+## 15. ホストOS側からブラウザでアプリケーションを表示  
+ホストOSのブラウザで以下のURLを入力すればアプリケーションを確認することができます。  
 
-    IPアドレス：192.168.56.56
+    http://192.168.56.56
 
 最初に表示されるLaravelデフォルトの画面にアプリケーションへのリンクを作成しているので確認してください。
