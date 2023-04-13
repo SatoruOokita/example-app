@@ -5,11 +5,64 @@
 このアプリケーションはLaravelの学習過程で作成したものです。  
 使用した参考書は「プロフェッショナルWebプログラミング Laravel9」です。
 
-主な機能は、140文字以内のつぶやきを表示することです。
+主な機能は、つぶやき機能と席替え機能です。
+
+### つぶやき機能でできること
+- ユーザー登録
+- 140文字以内のつぶやきの作成（画像を4枚まで添付）
+- 作成したつぶやきの編集
+- 作成したつぶやきの削除
+- 作成されたつぶやきの表示
+  
+### 席替え機能でできること
+- 生徒数・座席の列の数・座席の行の数を入力
+- 入力に応じて席替えを実行
+- 席替えのやり直し
 
 ### 注意
-※ Mailhogのインストールができていないため、会員登録を行うとエラー画面になります。  
-※画像をアップロードしても正しく表示されない状態です。
+※ ~~Mailhogのインストールができていないため、会員登録を行うとエラー画面になります。~~  
+※ ~~画像をアップロードしても正しく表示されない状態です。~~
+
+## 0. 「インストール作業」の前に
+本ReadMeは、仮想環境をVagrantで用意し、そこでアプリケーションを動作させることを念頭に作成しています。
+
+ローカルの開発環境で動作させる場合には、手順0-1~手順0-5を参考に作業を進めてプロジェクトを立ち上げてください。
+
+※Windowsマシンで作業を行う場合は、[WSL](https://learn.microsoft.com/ja-jp/windows/wsl/install)環境とDocker [Desktop](https://docs.docker.com/desktop/install/windows-install/)を用意し、WSLのターミナルで作業を進めてください。
+
+### 0-1. リポジトリをクローン
+次のコマンドを実行して、GitHubのリポジトリからプロジェクトをクローンしましょう。
+
+    git clone https://github.com/SatoruOokita/example-app.git
+
+### 0-2. アプリケーションのディレクトリへ移動
+アプリケーションのルートディレクトリへ移動
+
+    cd example-app
+
+### 0-3. .envファイルの作成
+`.env.example`をコピーして`.env`を作成する
+
+    cp .env.example .env
+
+### 0-4. 必要なパッケージをインストール
+次のコマンドを実行し、プロジェクトの依存関係をインストールします。  
+これにより、必要なパッケージがインストールされます。
+
+    composer install
+
+### 0-5. アプリケーションを実行
+Laravel Sailを使用して、Dockerコンテナを起動します。  
+これにより、アプリケーションの実行環境が整います。次のコマンドを実行してください。
+
+    ./vendor/bin/sail up
+
+#### ※`could not open input file`エラーが発生した場合
+`composer.json`を確認すると、既にLaravel Sailがインストールされているのに`./vendor/bin/sail up`コマンドを実行した際に`could not open input file`エラーが発生することがありました。
+
+そのようなことが起こった場合には、次のコマンドを実行してlaravel/sailパッケージをインストールし直してから、再度`./vendor/bin/sail up`コマンドを実行してください。
+
+    composer require laravel/sail --dev
 
 ## 1. インストール作業
 ### 1-1. Virtualboxインストール
@@ -51,9 +104,36 @@
 
 コマンドプロンプトの「ユーザー名@ホスト名」が、「vagrant@ubuntu-jammy」になればログイン成功です。
 
-## 4. nginxの設定を仮想マシンに追加  
-/etc/nginx/sites-available ディレクトリに、example.comというファイルを作成し、以下の設定内容を貼り付けてください。  
-テキストエディターは各々好みのものを使ってください。  
+## 4. アプリケーションを `/var/www/html`ディレクトリへ配置する  
+仮想マシンにログインできたら、まずはアプリケーションを `/var/www/html`ディレクトリへ移動させましょう。
+
+なお、ここ（Vagrantを利用する場合）ではLaravelアプリケーション名は`example-app`とし、デプロイ先を`/var/www/html/example-app`として作業を進めていきます。
+
+### 4-1. アプリケーションを確認
+ホストOS側のexample-appディレクトリは、仮想マシン側では `/vagrant` となっています。  
+
+    ls -al /vagrant 
+
+上のコマンドを実行すると、example-appのルートディレクトリと同じ内容が表示されるはずです。
+
+### 4-2. アプリケーションを移動（コピー）
+それでは、この/vagrantディレクトリ（example-app）を`/var/www/html/`ディレクトリへ配置しましょう。以下のコマンドを実行してください。
+
+    sudo cp -r /vagrant /var/www/html/example-app
+
+`/vagrant`ディレクトリが、`/var/www/html/`ディレクトリに、`example-app`としてコピーされます。
+
+### 4-3. 移動できたか確認
+次のコマンドで`/var/www/html`ディレクトリの中身を見ると、`example-app`というディレクトリが追加されていることが確認できます。
+
+    ls -al /var/www/html
+
+## 5. nginxの設定を仮想マシンに追加  
+デフォルトの設定の場合、nginxのドキュメントルートは`/var/www/html/index.nginx-debian.html`です。
+
+`example-app/public`がnginxのドキュメントルートとなるように設定を変更していきましょう。テキストエディターは各々好みのものを使ってください。 
+
+`/etc/nginx/sites-available` ディレクトリに、`example.com`というファイルを作成し、以下の設定内容を貼り付けてください。  
 
 ※Vimを用いた作業手順の例を example.comの内容の後に記しておきます。
 
@@ -62,7 +142,6 @@
         listen 80;
         listen [::]:80;
         server_name example.com;
-        # root /srv/example.com/public;
         # root /var/www/html/;
         root /var/www/html/example-app/public;
 
@@ -94,22 +173,22 @@
     }
 
 ### Vimを使った作業の例
-次のコマンドを実行して example.comというファイルを作成します。
+次のコマンドを実行して `example.com`というファイルを作成してvimを開きます。
 
     sudo vi /etc/nginx/sites-available/example.com
 
-エディターが立ち上がったら上記の「/etc/nginx/sites-available/example.comの内容」を丸ごと貼り付けます。
+vimが立ち上がったら上記の「/etc/nginx/sites-available/example.comの内容」を丸ごと貼り付けます。
 貼り付けることができたら、次の命令をVimに出して変更を保存した上でVimを閉じます。
 
     :wq
 
-## 5. 設定ファイルのシンボリックリンクの作成  
-次のコマンドを実行して、先ほど作成したnginxの設定ファイルのシンボリックリンクを sites-enabledディレクトリに作成します。
+## 6. 設定ファイルのシンボリックリンクの作成  
+次のコマンドを実行して、先ほど作成したnginxの設定ファイルのシンボリックリンクを `sites-enabled`ディレクトリに作成します。
 
     sudo ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/
 
-## 6. デフォルトのシンボリックリンクの削除  
-次のコマンドを実行して、/etc/nginx/sites-enabled に元々存在しているシンボリックリンクを削除します。
+## 7. デフォルトのシンボリックリンクの削除  
+次のコマンドを実行して、`/etc/nginx/sites-enabled` に元々存在しているシンボリックリンクを削除します。
 
     sudo rm /etc/nginx/sites-enabled/default
 
@@ -117,119 +196,143 @@
 
     sudo systemctl restart nginx
 
-## 7. mysqlにユーザー(test)を追加  
-まず、mysqlにsudoを使ってログインします。
+## 8. MySQLにユーザー(test)を追加  
+`Vagrant up`実行時にMySQLをインストールしています。  
+データベースを利用できるように、MySQLの設定を行っていきましょう。
+
+### 8-1. MySQLにログイン
+mysqlにsudoを使ってログインします。
 
     sudo mysql
 
+### 8-2. ユーザーの追加
 次に、mysqlにログインした状態で以下のコマンドを実行し、testというユーザーを追加します。
 
     CREATE USER 'test'@'localhost' IDENTIFIED BY 'Password@0000';
-  
+
+### 8-3. ユーザーの権限を編集
 以下のコマンドを実行して、ユーザー(test)にDBへのアクセス権限を与えてください。
 
     GRANT ALL PRIVILEGES ON *.* TO 'test'@'localhost';
 
+### 8-4. 変更内容の反映
 変更した設定内容を反映させるために、権限をリロードします。以下のコマンドを実行してください。
 
     FLUSH PRIVILEGES;
 
-最後に、MySQLのコマンドラインクライアントを終了します。以下のコマンドを実行してください。
+MySQLのコマンドラインクライアントを終了します。以下のコマンドを実行してください。
 
     exit
 
-先ほど作成したユーザー(test)でmysqlにアクセスできるかを確認しておきましょう。
-以下のコマンドを実行するとパスワードの入力が求められるので、Password@0000と入力するか、自身で設定したパスワードを入力してください。
+### 8-5. MySQLにアクセスできるか確認
+先ほど作成したユーザー(test)でMySQLにアクセスできるかを確認しておきましょう。
+以下のコマンドを実行するとパスワードの入力が求められるので、「 Password@0000 」と入力するか、自身で設定したパスワードを入力してください。
 
     mysql -u test -p
 
-mysqlに入ることができれば、問題ありません。再度exitと入力して抜けてください。
-
-## 8. アプリケーション(example-app)をnginxのドキュメンルートへ配置する  
-『vagrant up』コマンドを実行したことで、ホストOS側のexample-appディレクトリは、仮想マシン側では `/vagrant` となっています。  
-次のコマンドを仮想マシンで実行すると、example-appのルートディレクトリと同じ内容が表示されるはずです。
-
-    ls -al /vagrant 
-
-それでは、この/vagrantディレクトリ（example-app）をnginxのドキュメントルートへ配置させていきましょう。
-### 8-1. /vagrantディレクトリ（example-app）のコピーを作成
-まず、仮想マシンにログインしている状態で、以下のコマンドを実行してください。
-
-    sudo cp -r /vagrant /var/www/html/
-
-すると/vagrantディレクトリ（example-app）が、/var/www/html/ディレクトリにコピーされます。
-次のコマンドでvagrantディレクトリがコピーされたのかを確認できます。vagrantというディレクトリが追加されているはずです。
-
-    ls -al /var/www/html
-
-### 8-2. vagrantディレクトリの名前を変更
-次のコマンドを実行して、vagrantディレクトリの名前をexample-appに変更しましょう。
-
-    sudo mv /var/www/html/vagrant/ /var/www/html/example-app
-
-すると /vagrantディレクトリにあったexample-appが /var/www/htmlディレクトリへ移動しています。
+MySQLに入ることができれば、問題ありません。再度exitと入力して抜けてください。
 
 ## 9. example-appのユーザーをwww-dataに変更  
-nginxのドキュメントルートのユーザーが www:data なので、アプリケーションのユーザーも www:data に変更しておきます。
+nginxのユーザーが `www:data` なので、アプリケーションのユーザーも `www:data` に変更しておきます。
 
     sudo chown -R www-data:www-data /var/www/html/example-app
 
-これで、nginxのドキュメントルートにexample-appを配置することができました。
-
-## 10. .envファイルの編集  
+## 10. アプリケーションへ移動
 ここから先の作業は、アプリケーション(example-app)のルートディレクトリで行います。  
 コマンドプロンプト(Windows)やターミナル(MacOS)で移動しておきましょう。
 
     cd /var/www/html/example-app
 
-### 10-1. .env.exampleファイルの名前を.envに変更
+## 11. .envファイルの編集  
+### 11-1. .env.exampleファイルの名前を.envに変更
 このReadMe通りに仮想マシンを立ち上げている場合は .env.exampleのファイル名を .envに名前を変更しておきましょう。次のコマンドを実行します。
 
     sudo mv .env.example .env
 
-### 10-2. .envファイルの内容を変更
-#### 10-2-1. データベースの設定を変更
-デプロイ環境におけるmysqlの設定を、19行目から25行目にコメントアウトしています。
-そのコメントアウトを解除した後、11行目から17行目に書いている開発環境におけるmysqlの設定をコメントアウトするか削除しておいてください。
+### 11-2. .envファイルの内容を変更
+各々で自分の環境に適した設定を行ってください。
 
-#### 10-2-2. デバックモードを無効にする
-リポジトリをクローンした段階では、デバックモードが有効になっているので無効にします。
-4行目の`APP_DEBUG=true`を`APP_DEBUG=false`に変更してください。
+以下は`.env`ファイルの例です。  
+コピー&ペーストで利用して
 
-#### Vimで.envファイルを開く
-    sudo vi .env
-
-#### .envファイルのデバックモードとMysqlの設定
-.envファイルを開いたら、以下の設定のコメントアウトを解除してください。
-Vimでファイルの中身を編集する際には「i」を1回クリックします。すると編集モードになります。 
-
-4行目（デバックモード）  
-
+#### .envの内容
+    APP_NAME=Laravel
+    APP_ENV=local
+    APP_KEY=base64:o6AMaz0Sska5mQ4mD1lkof6XeJgEA8VDazWQKqYMLX8=
     APP_DEBUG=false
+    APP_URL=http://localhost
 
-19行目から25行目(mysqlの設定)
+    LOG_CHANNEL=stack
+    LOG_DEPRECATIONS_CHANNEL=null
+    LOG_LEVEL=debug
 
-    # デプロイ環境でのDB設定（この行はコメントアウトのまま）
-    #DB_CONNECTION=mysql
-    #DB_HOST='localhost'
-    #DB_PORT=3306
-    #DB_DATABASE=example_app
-    #DB_USERNAME=test
-    #DB_PASSWORD=Password@0000
+    # デプロイ環境でのDB設定
+    DB_CONNECTION=mysql
+    DB_HOST='localhost'
+    DB_PORT=3306
+    DB_DATABASE=example_app     
+    DB_USERNAME=test
+    DB_PASSWORD=Password@0000
 
-#### 変更を保存してVimを閉じる
-Vimで編集モードを閉じるには、escキーを押してから、次のコマンドを入力します。
+    BROADCAST_DRIVER=log
+    CACHE_DRIVER=file
+    FILESYSTEM_DISK=local
+    QUEUE_CONNECTION=sync
+    #QUEUE_CONNECTION=database   # テキストp199。Queueをデータベースで管理する。
+    SESSION_DRIVER=file
+    SESSION_LIFETIME=120
 
-    :wq
+    MEMCACHED_HOST=memcached
 
-自身で用意した仮想環境で作業を行う場合は、各仮想マシンの要件を満たす形で .envファイルを用意してください。内容については.env.exampleファイルを参照してください。
+    REDIS_HOST=redis
+    REDIS_PASSWORD=null
+    REDIS_PORT=6379
 
-## 11. Composer install を実行  
+    MAIL_MAILER=smtp
+    MAIL_HOST=localhost
+    MAIL_PORT=1025
+    MAIL_USERNAME=null
+    MAIL_PASSWORD=null
+    MAIL_ENCRYPTION=null
+    MAIL_FROM_ADDRESS="hello@example.com"
+    MAIL_FROM_NAME="${APP_NAME}"
+
+    AWS_ACCESS_KEY_ID=
+    AWS_SECRET_ACCESS_KEY=
+    AWS_DEFAULT_REGION=us-east-1
+    AWS_BUCKET=
+    AWS_USE_PATH_STYLE_ENDPOINT=false
+
+    PUSHER_APP_ID=
+    PUSHER_APP_KEY=
+    PUSHER_APP_SECRET=
+    PUSHER_HOST=
+    PUSHER_PORT=443
+    PUSHER_SCHEME=https
+    PUSHER_APP_CLUSTER=mt1
+
+    # https://chigusa-web.com/blog/vite-to-mix/を参考にしてMixに関する記述を追加
+    MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
+    MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
+
+    SCOUT_DRIVER=meilisearch
+    MEILISEARCH_HOST=http://meilisearch:7700
+
+#### .envの設定内容について
+.envの内容について記しておきます。
+
+- デバックモードはオフになっている
+- DBの設定は本ReadMeに沿っている
+- Mailhogを利用できるように設定を変更している
+
+## 12. composer.json
+
+## 12. Composer install を実行  
 アプリケーションのルートディレクトリで次のコマンドを実行してライブラリをインストールします。
 
     sudo -u www-data composer install --optimize-autoloader --no-dev
 
-## 12. データベースの作成
+## 13. データベースの作成
 example-appのルートディレクトリで以下のコマンドを実行します。
 
     sudo -u www-data php artisan migrate
