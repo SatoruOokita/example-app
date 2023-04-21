@@ -4,7 +4,6 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SeatingController;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,7 +25,7 @@ Route::get('/', function () {
  * /sampleにGETメソッドでリクエストされた場合に、
  * \App\Http\Controllers\Sample\IndexControllerコントローラのshowメソッドへルーティングされるという設定。
  */
-Route::get('/sample', [\App\Http\Controllers\Sample\IndexController::class, 'show']);
+// Route::get('/sample', [\App\Http\Controllers\Sample\IndexController::class, 'show']);
 
 /**
  * 『プロフェッショナルWebプログラミング for Laravel9』p043
@@ -78,6 +77,14 @@ Route::middleware('auth')->group(function () {
 Route::get('/sekigae', [SeatingController::class, 'index'])->name('sekigae.index');
 Route::post('/sekigae/generate', [SeatingController::class, 'generate'])->name('sekigae.generate');
 Route::get('/sekigae/show', [SeatingController::class, 'show'])->name('sekigae.show');
+
+
+// 文字列検索の処理
+
+//Route::get('/tweet', [\App\Http\Controllers\TweetSearchController::class])->name('tweet.index');
+//Route::get('/tweet', [\App\Http\Controllers\TweetSearchController::class, 'index'])->name('tweet.index');
+
+
 
 
 Route::get('/dashboard', function () {
