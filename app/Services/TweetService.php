@@ -10,12 +10,45 @@ use App\Models\Image;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
+
+
 class TweetService
 {
-    public function getTweets()
+
+    // public function getTweets()
+    // {
+    //     return Tweet::with('images')->orderBy('created_at', 'DESC')->get();
+    // }
+
+    /**
+     * 文字列検索機能を追加
+     */
+    public function getTweets($search = null, $match = null)
     {
-        return Tweet::with('images')->orderBy('created_at', 'DESC')->get();
+        $query = Tweet::with('images')->orderBy('created_at', 'DESC');
+
+        if (!is_null($search)) {
+            switch ($match) {
+                case 'partial':
+                    $query->where('content', 'LIKE', '%' . $search . '%');
+                    break;
+                case 'prefix':
+                    $query->where('content', 'LIKE', $search . '%');
+                    break;
+                case 'suffix':
+                    $query->where('content', 'LIKE', '%' . $search);
+                    break;
+                default:
+                    $query->where('content', 'LIKE', '%' . $search . '%');
+            }
+        }
+
+
+
+        return $query->get();
     }
+
+
 
     /**
      * 自分のtweetかどうかをチェックするメソッド
@@ -33,20 +66,20 @@ class TweetService
     /**
      * 前日のつぶやきの数をカウントする
      */
-    public function countYesterdayTweets(): int
-    {
-        return Tweet::whereDate(
-            'created_at',
-            '>=',
-            Carbon::yesterday()->toDateTimeString()
-        )
-            ->whereDate(
-                'created_at',
-                '<',
-                Carbon::today()->toDateTimeString()
-            )
-            ->count();
-    }
+    // public function countYesterdayTweets(): int
+    // {
+    //     return Tweet::whereDate(
+    //         'created_at',
+    //         '>=',
+    //         Carbon::yesterday()->toDateTimeString()
+    //     )
+    //         ->whereDate(
+    //             'created_at',
+    //             '<',
+    //             Carbon::today()->toDateTimeString()
+    //         )
+    //         ->count();
+    // }
 
     /**
      * 画像を含めたつぶやきの保存処理のために追加（p236）
