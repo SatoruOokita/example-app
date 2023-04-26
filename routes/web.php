@@ -23,19 +23,17 @@ Route::get('/', function () {
 });
 
 /**
-<<<<<<< HEAD
  * phpinfoを確認する用のルーティング
  */
 Route::get('/phpinfo', function () {
     phpinfo();
 });
-=======
- * logを表示する
+
+/** logを表示する
  * ルーティングを設定して、LogControllerのアクションを呼び出すためのURL（/log）を作成します。
  */
 Route::get('/log', [LogController::class, 'index']);
 
->>>>>>> xdebug
 
 /**
  * 『プロフェッショナルWebプログラミング for Laravel9』p042
