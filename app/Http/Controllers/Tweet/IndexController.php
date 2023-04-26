@@ -8,11 +8,7 @@ use App\Models\Tweet;
 // テキストp105の内容(TweetServiceのインポート)
 use App\Services\TweetService;
 use Illuminate\Http\Request;
-// 文字検索機能（TweetSearchServiceのインポート）
-use App\Services\TweetSearchService;
 
-// エラーを発生させてアプリの呼び出し元を探すために書き足した(2023.04.18)
-use Exception;
 
 class IndexController extends Controller
 {

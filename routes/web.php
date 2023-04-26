@@ -20,6 +20,13 @@ Route::get('/', function () {
 });
 
 /**
+ * phpinfoを確認する用のルーティング
+ */
+Route::get('/phpinfo', function () {
+    phpinfo();
+});
+
+/**
  * 『プロフェッショナルWebプログラミング for Laravel9』p042
  *  
  * /sampleにGETメソッドでリクエストされた場合に、
