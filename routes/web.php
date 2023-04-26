@@ -4,6 +4,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SeatingController;
 
+// logを表示するためのコントローラーを追加（4月26日(水)）
+use App\Http\Controllers\LogController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,6 +21,13 @@ use App\Http\Controllers\SeatingController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+/**
+ * logを表示する
+ * ルーティングを設定して、LogControllerのアクションを呼び出すためのURL（/log）を作成します。
+ */
+Route::get('/log', [LogController::class, 'index']);
+
 
 /**
  * 『プロフェッショナルWebプログラミング for Laravel9』p042
