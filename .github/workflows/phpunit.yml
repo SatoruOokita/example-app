@@ -176,8 +176,8 @@ jobs:
       # 追加: 専用ユーザーに権限を付与する
       - name: Grant privileges to the dedicated user
         run: |
-          mysql --host 127.0.0.1 --port 3306 --user root --password=root --execute "CREATE USER IF NOT EXISTS '${DB_USERNAME}'@'%' IDENTIFIED BY '${DB_PASSWORD}';"
-          mysql --host 127.0.0.1 --port 3306 --user root --password=root --execute "GRANT ALL PRIVILEGES ON *.* TO '${DB_USERNAME}'@'%' WITH GRANT OPTION;"
+          mysql --host 127.0.0.1 --port 3306 --user root --password=root --execute "CREATE USER IF NOT EXISTS '${{ env.DB_USERNAME }}'@'%' IDENTIFIED BY '${{ env.DB_PASSWORD }}';"
+          mysql --host 127.0.0.1 --port 3306 --user root --password=root --execute "GRANT ALL PRIVILEGES ON *.* TO '${{ env.DB_USERNAME }}'@'%' WITH GRANT OPTION;"
           mysql --host 127.0.0.1 --port 3306 --user root --password=root --execute "FLUSH PRIVILEGES;"
 
       - name: Create test database
