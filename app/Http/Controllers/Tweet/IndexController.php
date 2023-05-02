@@ -62,8 +62,6 @@ class IndexController extends Controller
     // dump($tweets);
     // app(\App\Exceptions\Handler::class)->render(request(), throw new \Error('dumpreport.'));
 
-
-
     // return view('tweet.index')
     //     ->with('tweets', $tweets,);
     // }
