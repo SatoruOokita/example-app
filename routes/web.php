@@ -73,7 +73,7 @@ Route::get('/log', [LogController::class, 'index']);
  * URLの値を取得するshowIdメソッド
  * ルータで{id}と記述することでコントローラのメソッドの引数で$idを受け取れるようになる。
  */
-Route::get('/sample/{id}', [\App\Http\Controllers\Sample\IndexController::class, 'showId']);
+// Route::get('/sample/{id}', [\App\Http\Controllers\Sample\IndexController::class, 'showId']);
 
 /**
  * 「/tweet」にリクエストがあった場合に、このコントローラへルーティングする
