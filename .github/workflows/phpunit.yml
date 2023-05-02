@@ -49,7 +49,78 @@
 #       - name: Execute tests (Unit and Feature tests) vjia PHPUnit
 #         run: vendor/bin/phpunit
 
-#-2023.05.02-----------
+#-2023.05.02 ver.1-----------
+# コントローラーを一つにまとめた際に、GitHub Actionsのテストでエラーが発生したため修正した
+#----------------------
+# name: Laravel
+
+# on:
+#   push:
+#   pull_request:
+
+# env:
+#   DB_USERNAME: sail
+#   DB_PASSWORD: password
+#   MAIL_FROM_ADDRESS: info@example.com
+
+# jobs:
+#   phpunit:
+#     runs-on: ubuntu-latest
+
+#     services:
+#       mysql.test:
+#         image: "mysql/mysql-server:8.0"
+#         ports:
+#           - 3306:3306
+
+#         env:
+#           MYSQL_DATABASE: "example_app"
+#           MYSQL_USER: ${{ env.DB_USERNAME }}
+#           MYSQL_PASSWORD: ${{ env.DB_PASSWORD }}
+#           MYSQL_ALLOW_EMPTY_PASSWORD: 1
+#         options: >-
+#           --health-cmd "mysqladmin ping"
+#           --health-interval 10s
+#           --health-timeout 5s
+#           --health-retries 5
+
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Setup PHP
+#         uses: shivammathur/setup-php@v2
+#         with:
+#           php-version: "8.1"
+#           tools: composer:v2
+#       - name: Copy .env
+#         run: cp .env.example .env.testing
+#       - name: Install Dependencies
+#         if: steps.cache.outputs.cache-hit != 'true'
+#         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+#       - name: Generate Key
+#         run: php artisan key:generate --env testing
+#       - name: Set hostname
+#         run: sudo echo "127.0.0.1 mysql.test" | sudo tee -a /etc/hosts
+
+#       # 追加: テスト用データベースを作成する
+#       - name: Create test database
+#         run: |
+#           mysql --host 127.0.0.1 --port 3306 --user ${{ env.DB_USERNAME }} --password=${{ env.DB_PASSWORD }} --execute "CREATE DATABASE IF NOT EXISTS test_db;"
+
+#       # 追加: .env.testing を更新する
+#       - name: Update .env.testing for testing
+#         run: |
+#           sed -i 's/DB_DATABASE=.*/DB_DATABASE=test_db/' .env.testing
+#           sed -i 's/DB_USERNAME=.*/DB_USERNAME=${{ env.DB_USERNAME }}/' .env.testing
+#           sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=${{ env.DB_PASSWORD }}/' .env.testing
+
+#       # 追加: テスト用データベースにマイグレーションを実行する
+#       - name: Run migrations for testing
+#         run: php artisan migrate --env testing
+
+#       - name: Execute tests (Unit and Feature tests) vjia PHPUnit
+#         run: vendor/bin/phpunit
+
+#-2023.05.02 ver.2-----
 # コントローラーを一つにまとめた際に、GitHub Actionsのテストでエラーが発生したため修正した
 #----------------------
 name: Laravel
@@ -77,6 +148,7 @@ jobs:
           MYSQL_DATABASE: "example_app"
           MYSQL_USER: ${{ env.DB_USERNAME }}
           MYSQL_PASSWORD: ${{ env.DB_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: root # 追加: rootパスワードの設定
           MYSQL_ALLOW_EMPTY_PASSWORD: 1
         options: >-
           --health-cmd "mysqladmin ping"
@@ -101,19 +173,23 @@ jobs:
       - name: Set hostname
         run: sudo echo "127.0.0.1 mysql.test" | sudo tee -a /etc/hosts
 
-      # 追加: テスト用データベースを作成する
+      # 追加: 専用ユーザーに権限を付与する
+      - name: Grant privileges to the dedicated user
+        run: |
+          mysql --host 127.0.0.1 --port 3306 --user root --password=root --execute "CREATE USER IF NOT EXISTS '${DB_USERNAME}'@'%' IDENTIFIED BY '${DB_PASSWORD}';"
+          mysql --host 127.0.0.1 --port 3306 --user root --password=root --execute "GRANT ALL PRIVILEGES ON *.* TO '${DB_USERNAME}'@'%' WITH GRANT OPTION;"
+          mysql --host 127.0.0.1 --port 3306 --user root --password=root --execute "FLUSH PRIVILEGES;"
+
       - name: Create test database
         run: |
           mysql --host 127.0.0.1 --port 3306 --user ${{ env.DB_USERNAME }} --password=${{ env.DB_PASSWORD }} --execute "CREATE DATABASE IF NOT EXISTS test_db;"
 
-      # 追加: .env.testing を更新する
       - name: Update .env.testing for testing
         run: |
           sed -i 's/DB_DATABASE=.*/DB_DATABASE=test_db/' .env.testing
           sed -i 's/DB_USERNAME=.*/DB_USERNAME=${{ env.DB_USERNAME }}/' .env.testing
           sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=${{ env.DB_PASSWORD }}/' .env.testing
 
-      # 追加: テスト用データベースにマイグレーションを実行する
       - name: Run migrations for testing
         run: php artisan migrate --env testing
 
