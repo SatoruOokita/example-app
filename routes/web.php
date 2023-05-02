@@ -38,7 +38,7 @@ Route::middleware('auth')->group(function () {
         ->name('tweet.update.put')->where('tweetId', '[0-9]+');
 
     // つぶやきを削除するためのルーティング
-    Route::delete('/tweet/delete/{tweetId}', [TweetprocessController::class, 'deleteTweet'])
+    Route::delete('/tweet/delete/{tweetId}', [TweetprocessController::class, 'deletecontroller'])
         ->name('tweet.delete');
 });
 // ***ここまで(2023.05.02実施)***
@@ -118,11 +118,6 @@ Route::get('/log', [LogController::class, 'index']);
 Route::get('/sekigae', [SeatingController::class, 'index'])->name('sekigae.index');
 Route::post('/sekigae/generate', [SeatingController::class, 'generate'])->name('sekigae.generate');
 Route::get('/sekigae/show', [SeatingController::class, 'show'])->name('sekigae.show');
-
-
-// 文字列検索の処理
-//Route::get('/tweet', [\App\Http\Controllers\TweetSearchController::class])->name('tweet.index');
-//Route::get('/tweet', [\App\Http\Controllers\TweetSearchController::class, 'index'])->name('tweet.index');
 
 
 Route::get('/dashboard', function () {
