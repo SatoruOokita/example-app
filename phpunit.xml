@@ -25,8 +25,8 @@
         <!-- <env name="DB_DATABASE" value="example_app"/> -->
         <env name="DB_HOST" value="mysql.test"/>
         <env name="MAIL_MAILER" value="array"/>
-        <!-- <env name="QUEUE_CONNECTION" value="sync"/> -->
-        <env name="QUEUE_CONNECTION" value="mysql"/>
+        <env name="QUEUE_CONNECTION" value="sync"/>
+        <!-- <env name="QUEUE_CONNECTION" value="mysql"/> -->
         <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
     </php>
