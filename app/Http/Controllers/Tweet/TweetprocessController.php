@@ -8,17 +8,22 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Tweet\UpdateRequest;
 use App\Services\TweetService;
 use App\Http\Requests\Tweet\CreateRequest;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class TweetprocessController extends Controller
 {
-    // 元、 Tweet/IndexController.php
-    // /tweetにアクセスがあった場合につぶやきの一覧を表示する
-    public function indexcontroller(Request $request, TweetService $tweetService)
+    private $tweetService_variable;
+
+    public function __construct(TweetService $tweetService)
+    {
+        $this->tweetService_variable = $tweetService;
+    }
+
+    public function indexcontroller(Request $request)
     {
         $search = $request->input('search');
         $match = $request->input('match');
-        $tweets = $tweetService->getTweets($search, $match);
+        $tweets = $this->tweetService_variable->getTweets($search, $match);
 
         return view('tweet.index')
             ->with('tweets', $tweets)
@@ -26,10 +31,9 @@ class TweetprocessController extends Controller
             ->with('match', $match);
     }
 
-    // 元、 Tweet/CreateController.php
-    public function createcontroller(CreateRequest $request, TweetService $tweetService)
+    public function createcontroller(CreateRequest $request)
     {
-        $tweetService->saveTweet(
+        $this->tweetService_variable->saveTweet(
             $request->userId(),
             $request->tweet(),
             $request->images()
@@ -37,46 +41,32 @@ class TweetprocessController extends Controller
         return redirect()->route('tweet.index');
     }
 
-    // 元、 Tweet/DeleteController.php
-    public function deletecontroller(Request $request, TweetService $tweetService)
+    public function deletecontroller(Request $request)
     {
         $tweetId = (int) $request->route('tweetId');
-        // テキストp138の内容
-        if (!$tweetService->checkOwnTweet($request->user()->id, $tweetId)) {
+        if (!$this->tweetService_variable->checkOwnTweet($request->user()->id, $tweetId)) {
             throw new AccessDeniedHttpException();
         }
-        $tweetService->deleteTweet($tweetId);
+        $this->tweetService_variable->deleteTweet($tweetId);
         return redirect()
             ->route('tweet.index')
             ->with('feedback.success', "つぶやきを削除しました。");
     }
 
-    // 元、 Tweet/Update/IndexController.php
-    public function updateindexcontroller(Request $request, TweetService $tweetService)
+    public function updateindexcontroller(Request $request)
     {
-        /** 
-         * テキストp86の内容
-         * Routeで{tweetId}と指定したため、Requestから「$request->route('tweetId')」を取得できる。
-         */
         $tweetId = (int) $request->route('tweetId');
-        // テキストp138の内容
-        if (!$tweetService->checkOwnTweet($request->user()->id, $tweetId)) {
+        if (!$this->tweetService_variable->checkOwnTweet($request->user()->id, $tweetId)) {
             throw new AccessDeniedHttpException();
         }
 
         $tweet = Tweet::where('id', $tweetId)->firstOrFail();
         return view('tweet.update')->with('tweet', $tweet);
-        // if(is_null($tweet)){
-        //     throw new NotFoundHttpException('存在しないつぶやきです。');
-        // }
-        // dd($tweetId);
     }
 
-    // 元、 Tweet/Update/PutController.php
-    public function updateputcontroller(UpdateRequest $request, TweetService $tweetService)
+    public function updateputcontroller(UpdateRequest $request)
     {
-        // テキストp138の内容
-        if (!$tweetService->checkOwnTweet($request->user()->id, $request->id())) {
+        if (!$this->tweetService_variable->checkOwnTweet($request->user()->id, $request->id())) {
             throw new AccessDeniedHttpException();
         }
 
