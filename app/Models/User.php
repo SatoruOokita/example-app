@@ -14,6 +14,7 @@ class User extends Authenticatable
 
     /**
      * The attributes that are mass assignable.
+     * 大量に割り当てられる属性
      *
      * @var array<int, string>
      */
